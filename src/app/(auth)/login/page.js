@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const params = useSearchParams();
+
   const justRegistered = params.get("registered") === "1";
 
   const [username, setUsername] = useState("");
@@ -25,14 +26,24 @@ export default function LoginPage() {
       <div className="w-full max-w-sm relative">
         <div className="flex items-center justify-center gap-2.5 mb-10">
           <div className="h-8 w-8 rounded-lg bg-brand-gradient flex items-center justify-center">
-            <span className="text-ink font-display text-[16px] font-semibold">P</span>
+            <span className="text-ink font-display text-[16px] font-semibold">
+              P
+            </span>
           </div>
-          <p className="font-display text-[19px]">Partner Registry</p>
+
+          <p className="font-display text-[19px]">
+            Partner Registry
+          </p>
         </div>
 
         <div className="card p-8">
-          <h1 className="font-display text-[25px] text-ink">Sign in</h1>
-          <p className="mt-1.5 text-[14px] text-slate">Access your partner workspace.</p>
+          <h1 className="font-display text-[25px] text-ink">
+            Sign in
+          </h1>
+
+          <p className="mt-1.5 text-[14px] text-slate">
+            Access your partner workspace.
+          </p>
 
           {justRegistered && (
             <div className="mt-5 rounded-lg border border-moss/30 bg-moss-soft px-3.5 py-2.5 text-[13.5px] text-moss">
@@ -42,7 +53,10 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="mt-6 space-y-4">
             <div>
-              <label className="field-label">Username</label>
+              <label className="field-label">
+                Username
+              </label>
+
               <input
                 className="field-input"
                 value={username}
@@ -51,8 +65,12 @@ export default function LoginPage() {
                 required
               />
             </div>
+
             <div>
-              <label className="field-label">Password</label>
+              <label className="field-label">
+                Password
+              </label>
+
               <input
                 type="password"
                 className="field-input"
@@ -62,7 +80,11 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <button type="submit" className="btn-primary w-full mt-2">
+
+            <button
+              type="submit"
+              className="btn-primary w-full mt-2"
+            >
               Sign in
             </button>
           </form>
@@ -70,11 +92,22 @@ export default function LoginPage() {
 
         <p className="mt-6 text-[14px] text-slate text-center">
           New partner?{" "}
-          <Link href="/signup" className="text-ink font-medium underline underline-offset-2">
+          <Link
+            href="/signup"
+            className="text-ink font-medium underline underline-offset-2"
+          >
             Create an account
           </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
   );
 }
