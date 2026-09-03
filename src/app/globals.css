@@ -1,26 +1,130 @@
 @import "tailwindcss";
+@import "react-toastify/dist/ReactToastify.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+@theme {
+  /* Colors */
+  --color-paper: #f7f5ef;
+  --color-paper-card: #ffffff;
+  --color-paper-line: #e7e2d8;
+
+  --color-ink: #1f2933;
+  --color-slate: #64748b;
+  --color-slate-dim: #94a3b8;
+
+  --color-amber: #e2a33b;
+  --color-amber-dark: #a86b13;
+  --color-amber-soft: #fdf0d7;
+
+  --color-moss: #52745c;
+  --color-moss-soft: #e5f0e8;
+
+  --color-clay: #b7654e;
+  --color-clay-soft: #f7e4df;
+
+
+  /* Fonts */
+  --font-display: var(--font-fraunces);
+  --font-body: var(--font-inter);
+
+
+  /* Shadows */
+  --shadow-panel: 0 8px 24px rgba(31, 41, 51, 0.08);
+
+
+  /* Gradients */
+  --background-image-brand-gradient:
+    linear-gradient(135deg, #f2b544 0%, #e28b2c 100%);
+
+  --background-image-ink-gradient:
+    linear-gradient(180deg, #252a30 0%, #171b20 100%);
+
+  /* ADD THIS */
+  --background-image-hero-gradient:
+    linear-gradient(135deg, #252a30 0%, #30363d 100%);
 }
+@layer base {
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  ::selection {
+    @apply bg-amber-soft text-ink;
+  }
+
+  :focus-visible {
+    outline: 2px solid #e2a33b;
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+@layer components {
+
+  .field-label {
+    @apply block text-[13px] text-slate mb-1.5;
+  }
+
+
+  .field-input {
+    @apply w-full
+      rounded-lg
+      border border-paper-line
+      bg-paper-card
+      px-3.5 py-2.5
+      text-[14.5px]
+      text-ink
+      placeholder:text-slate-dim
+      focus:border-ink/60
+      focus:ring-2
+      focus:ring-amber/25
+      outline-none
+      transition-all;
+  }
+
+
+  .btn-primary {
+    @apply inline-flex
+      items-center
+      justify-center
+      rounded-lg
+      bg-brand-gradient
+      text-ink
+      px-4 py-2.5
+      text-[14.5px]
+      font-medium
+      shadow-panel
+      hover:brightness-105
+      active:brightness-95
+      transition-all
+      disabled:opacity-50
+      disabled:cursor-not-allowed;
+  }
+
+
+  .btn-secondary {
+    @apply inline-flex
+      items-center
+      justify-center
+      rounded-lg
+      border border-paper-line
+      bg-paper-card
+      text-ink
+      px-4 py-2.5
+      text-[14.5px]
+      font-medium
+      hover:border-ink/40
+      hover:bg-paper
+      transition-colors;
+  }
+
+
+  .card {
+    @apply border
+      border-paper-line
+      bg-paper-card
+      rounded-xl
+      shadow-panel;
+  }
 }
