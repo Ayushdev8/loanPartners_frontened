@@ -7,3 +7,11 @@ export const api = axios.create({
     }
 }
 );
+
+export const api2 = axios.create({
+    baseURL: "https://samarthai-aosz.onrender.com/api",
+    headers:{
+        "Content-Type":"application/json"
+    }
+}
+);
