@@ -6,6 +6,7 @@ import { schemes, currentPartner } from "@/lib/dummy-data";
 import { StatCard } from "@/components/ui/StatCard";
 import { LoadBadge, StatusBadge } from "@/components/ui/Badge";
 import { api2 } from "@/service/api";
+import { Copy } from "lucide-react";
 
 
 export default function DashboardPage() {
@@ -13,6 +14,8 @@ export default function DashboardPage() {
   const avgTurnaround = Math.round(
     schemes.reduce((sum, s) => sum + s.avgTurnaroundDays, 0) / schemes.length
   );
+  const [copiedId, setCopiedId] = useState(null);
+
 
   const [allSchemes, setAllSchemes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +38,18 @@ export default function DashboardPage() {
   useEffect(() => {
     getAllSchemes();
   }, []);
+  const handleCopy = async (e, id) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  await navigator.clipboard.writeText(id);
+
+  setCopiedId(id);
+
+  setTimeout(() => {
+    setCopiedId(null);
+  }, 1500);
+};
 
   return (
     <div>
@@ -55,12 +70,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Active schemes" value={schemes.length} accent="#5B5FE8" />
+        <StatCard label="Active schemes" value={allSchemes.length} accent="#5B5FE8" />
         <StatCard label="Running high load" value={highLoad} hint="schemes flagged HIGH" accent="#BD5B3E" />
         <StatCard label="Avg. turnaround" value={`${avgTurnaround}d`} hint="across all schemes" accent="#4C7A5D" />
       </div>
 
-      {/* Your existing recent-schemes block */}
+      {/* Your existing recent-schemes block
       <div className="mt-8">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-display text-[19px] text-ink">Recent schemes</h2>
@@ -86,7 +101,7 @@ export default function DashboardPage() {
             </Link>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* All government schemes — fetched from API */}
       <div className="mt-9">
@@ -121,17 +136,39 @@ export default function DashboardPage() {
                 key={s.id}
                 className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-paper transition-colors group"
               >
-                <Link href={`/schemes/${s.id}`} className="flex items-center gap-4 min-w-0 flex-1">
-                  <div className="h-10 w-10 shrink-0 rounded-lg bg-indigo-soft flex items-center justify-center text-indigo text-[13px] font-semibold">
-                    {s.id.slice(0, 2)}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[14.5px] text-ink font-medium truncate group-hover:underline underline-offset-2">
-                      {s.title}
-                    </p>
-                    <p className="text-[12.5px] text-slate-dim mt-0.5">{s.id}</p>
-                  </div>
-                </Link>
+                <Link
+                    href={`/schemes/${s.id}`}
+                    className="flex items-center gap-4 min-w-0 flex-1"
+                  >
+                    <div className="h-10 w-10 shrink-0 rounded-lg bg-indigo-soft flex items-center justify-center text-indigo text-[13px] font-semibold">
+                      {s.id.slice(0, 2)}
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="text-[14.5px] text-ink font-medium truncate group-hover:underline underline-offset-2">
+                        {s.title}
+                      </p>
+
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <p className="text-[12.5px] text-slate-dim">
+                          {s.id}
+                        </p>
+
+                      <button
+                        type="button"
+                        onClick={(e) => handleCopy(e, s.id)}
+                        className="text-slate-dim hover:text-ink"
+                        aria-label={`Copy scheme ID ${s.id}`}
+                      >
+                        {copiedId === s.id ? (
+                          <span className="text-xs">Copied</span>
+                        ) : (
+                          <Copy size={13} />
+                        )}
+                  </button>
+                      </div>
+                    </div>
+                  </Link>
 
                 <Link
                   href={{ pathname: "/schemes/new", query: { schemeId: s.id, title: s.title } }}
