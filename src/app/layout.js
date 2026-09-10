@@ -29,6 +29,7 @@ export default function RootLayout({ children }) {
           pauseOnHover
           closeOnClick
           theme="dark"
+          toastClassName="!rounded-xl !font-body !text-[13.5px]"
         />
 
       </body>

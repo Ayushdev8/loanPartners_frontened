@@ -75,33 +75,6 @@ export default function DashboardPage() {
         <StatCard label="Avg. turnaround" value={`${avgTurnaround}d`} hint="across all schemes" accent="#4C7A5D" />
       </div>
 
-      {/* Your existing recent-schemes block
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display text-[19px] text-ink">Recent schemes</h2>
-          <Link href="/schemes" className="text-[13.5px] text-slate hover:text-ink underline underline-offset-2">
-            View all
-          </Link>
-        </div>
-
-        <div className="card overflow-hidden">
-          {schemes.slice(0, 5).map((s, i) => (
-            <Link
-              key={s.id}
-              href={`/schemes/${s.id}`}
-              className={`flex items-center justify-between px-5 py-4 hover:bg-paper transition-colors ${
-                i !== 0 ? "border-t border-paper-line" : ""
-              }`}
-            >
-              <div>
-                <p className="text-[14.5px] text-ink font-medium">{s.schemeId}</p>
-                <p className="text-[13px] text-slate mt-0.5">{s.avgTurnaroundDays} day avg. turnaround</p>
-              </div>
-              <LoadBadge level={s.currentLoad} />
-            </Link>
-          ))}
-        </div>
-      </div> */}
 
       {/* All government schemes — fetched from API */}
       <div className="mt-9">
@@ -189,13 +162,13 @@ function SchemeListSkeleton() {
   return (
     <div className="card overflow-hidden divide-y divide-paper-line">
       {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="flex items-center gap-4 px-5 py-4 animate-pulse">
-          <div className="h-10 w-10 rounded-lg bg-paper-line shrink-0" />
+        <div key={i} className="flex items-center gap-4 px-5 py-4">
+          <div className="h-10 w-10 rounded-xl skeleton-block shrink-0" />
           <div className="flex-1 space-y-2">
-            <div className="h-3.5 w-2/3 rounded bg-paper-line" />
-            <div className="h-2.5 w-1/3 rounded bg-paper-line" />
+            <div className="h-3.5 w-2/3 rounded skeleton-block" />
+            <div className="h-2.5 w-1/3 rounded skeleton-block" />
           </div>
-          <div className="h-7 w-14 rounded-lg bg-paper-line shrink-0" />
+          <div className="h-7 w-14 rounded-lg skeleton-block shrink-0" />
         </div>
       ))}
     </div>

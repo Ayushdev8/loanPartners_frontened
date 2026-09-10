@@ -12,7 +12,7 @@ const loadLabels = {
 
 export function LoadBadge({ level }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12.5px] font-medium ${loadStyles[level]}`}>
+    <span className={`badge-pill ${loadStyles[level]}`}>
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {loadLabels[level]}
     </span>
@@ -21,12 +21,35 @@ export function LoadBadge({ level }) {
 
 export function StatusBadge({ verified }) {
   return verified ? (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-moss-soft px-2.5 py-1 text-[12.5px] font-medium text-moss">
+    <span className="badge-pill bg-moss-soft text-moss">
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
       Verified
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-paper-line px-2.5 py-1 text-[12.5px] font-medium text-slate">
+    <span className="badge-pill bg-paper-line text-slate">
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
       Pending review
+    </span>
+  );
+}
+
+const applicationStatusStyles = {
+  PENDING: "bg-amber-soft text-amber-dark",
+  ACCEPTED: "bg-moss-soft text-moss",
+  REJECTED: "bg-clay-soft text-clay",
+};
+
+const applicationStatusLabels = {
+  PENDING: "Pending review",
+  ACCEPTED: "Accepted",
+  REJECTED: "Rejected",
+};
+
+export function ApplicationStatusBadge({ status }) {
+  return (
+    <span className={`badge-pill ${applicationStatusStyles[status]}`}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+      {applicationStatusLabels[status]}
     </span>
   );
 }

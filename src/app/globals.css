@@ -4,6 +4,7 @@
 
 @theme {
   /* Colors */
+
   --color-paper: #f7f5ef;
   --color-paper-card: #ffffff;
   --color-paper-line: #e7e2d8;
@@ -22,15 +23,16 @@
   --color-clay: #b7654e;
   --color-clay-soft: #f7e4df;
 
+  /* ADD THESE */
+  --color-indigo: #4c4a93;
+  --color-indigo-soft: #e9e8f6;
 
   /* Fonts */
   --font-display: var(--font-fraunces);
   --font-body: var(--font-inter);
 
-
   /* Shadows */
   --shadow-panel: 0 8px 24px rgba(31, 41, 51, 0.08);
-
 
   /* Gradients */
   --background-image-brand-gradient:
@@ -39,7 +41,6 @@
   --background-image-ink-gradient:
     linear-gradient(180deg, #252a30 0%, #171b20 100%);
 
-  /* ADD THIS */
   --background-image-hero-gradient:
     linear-gradient(135deg, #252a30 0%, #30363d 100%);
 }
@@ -126,5 +127,19 @@
       bg-paper-card
       rounded-xl
       shadow-panel;
+  }
+
+  .badge-pill {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium;
+  }
+  .avatar {
+  @apply flex
+    items-center
+    justify-center
+    rounded-full
+    bg-brand-gradient
+    text-paper
+    font-semibold
+    shrink-0;
   }
 }
