@@ -38,6 +38,7 @@ const applicationStatusStyles = {
   PENDING: "bg-amber-soft text-amber-dark",
   ACCEPTED: "bg-moss-soft text-moss",
   REJECTED: "bg-clay-soft text-clay",
+  APPROVED: "bg-moss-soft text-moss",
 };
 
 const applicationStatusLabels = {
@@ -45,6 +46,7 @@ const applicationStatusLabels = {
   PENDING: "Pending review",
   ACCEPTED: "Accepted",
   REJECTED: "Rejected",
+  APPROVED:"Approved"
 };
 
 export function ApplicationStatusBadge({ status }) {

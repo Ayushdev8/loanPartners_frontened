@@ -6,13 +6,14 @@ import Link from "next/link";
 import { ApplicationsSkeleton, ApplicationStatusBadge, getInitials } from "@/components/ui/Badge";
 import { api } from "@/service/api";
 
-const filters = ["ALL", "APPLIED", "ACCEPTED", "REJECTED"];
+const filters = ["ALL", "APPLIED", "APPROVED", "REJECTED"];
 
 export default function ApplicationsPage() {
   const [filter, setFilter] = useState("ALL");
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updatingApplicantId, setUpdatingApplicantId] = useState(null);
 
   // Temporary partner ID
   // Later you can get this from logged-in partner data
@@ -44,6 +45,30 @@ export default function ApplicationsPage() {
     getApplications(partnerId);
   }, [partnerId]);
 
+const updateApplicationStatus = async (applicantId, status,partnerId) => {
+  try {
+    setUpdatingApplicantId(applicantId);
+    setError("")
+
+    const res = await api.put(`/public/applications/${applicantId}/${partnerId}/status`,
+      {
+        "status":status
+      }
+    );
+    console.log(res.data);
+    toast.success("Application accepted");
+
+  } catch (err) {
+    console.log(err.response?.data);
+
+    setError(
+        err?.response?.data?.message ||
+          "Failed to update application status."
+      );
+  } finally {
+    setUpdatingApplicantId(null);
+  }
+};
   const filtered = useMemo(() => {
     if (filter === "ALL") {
       return applications;
@@ -61,8 +86,8 @@ export default function ApplicationsPage() {
       (application) => application.status === "APPLIED"
     ).length,
 
-    ACCEPTED: applications.filter(
-      (application) => application.status === "ACCEPTED"
+    APPROVED: applications.filter(
+      (application) => application.status === "APPROVED"
     ).length,
 
     REJECTED: applications.filter(
@@ -201,7 +226,14 @@ export default function ApplicationsPage() {
           </div>
 
           <div className="divide-y divide-gray-200">
-              {filtered.map((application) => (
+              {filtered.map((application) => {
+                const isUpdating =updatingApplicantId === application.applicantId;
+
+              const isApplied=application.status === "APPLIED";
+
+              
+              return(
+                
                 <div
                   key={`${application.applicantId}-${application.schemeId}`}
                   className="grid grid-cols-1 gap-5 p-6 lg:grid-cols-[minmax(280px,2fr)_minmax(140px,1fr)_minmax(120px,1fr)_auto] lg:items-center"
@@ -248,17 +280,154 @@ export default function ApplicationsPage() {
                     </p>
                   </div>
 
-                  {/* Action */}
-                  <div className="lg:justify-self-end">
+                  {/* Actions */}
+                  <div className="flex flex-wrap items-center gap-2 lg:justify-self-end">
+                    {isApplied && (
+                      <>
+                        {/* Accept */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateApplicationStatus(
+                              application.applicantId,
+                              "APPROVED",
+                              partnerId
+                            )
+                          }
+                          disabled={isUpdating}
+                          className="
+                            group inline-flex items-center gap-2
+                            rounded-xl border border-emerald-200
+                            bg-emerald-50 px-4 py-2.5
+                            text-sm font-semibold text-emerald-700
+                            shadow-sm
+                            transition-all duration-200
+                            hover:-translate-y-0.5
+                            hover:border-emerald-300
+                            hover:bg-emerald-100
+                            hover:shadow-md
+                            active:translate-y-0
+                            active:scale-95
+                            disabled:pointer-events-none
+                            disabled:opacity-60
+                          "
+                        >
+                          {isUpdating ? (
+                            <span
+                              className="
+                                h-4 w-4 animate-spin rounded-full
+                                border-2 border-emerald-600/30
+                                border-t-emerald-600
+                              "
+                            />
+                          ) : (
+                            <svg
+                              className="h-4 w-4 transition-transform duration-200 group-hover:scale-110"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 111.414-1.414l2.543 2.543 6.543-6.543a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )}
+
+                          {isUpdating ? "Saving..." : "Accept"}
+                        </button>
+
+                        {/* Reject */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateApplicationStatus(
+                              application.applicantId,
+                              "REJECTED",
+                              partnerId
+                            )
+                          }
+                          disabled={isUpdating}
+                          className="
+                            group inline-flex items-center gap-2
+                            rounded-xl border border-red-200
+                            bg-red-50 px-4 py-2.5
+                            text-sm font-semibold text-red-700
+                            shadow-sm
+                            transition-all duration-200
+                            hover:-translate-y-0.5
+                            hover:border-red-300
+                            hover:bg-red-100
+                            hover:shadow-md
+                            active:translate-y-0
+                            active:scale-95
+                            disabled:pointer-events-none
+                            disabled:opacity-60
+                          "
+                        >
+                          {isUpdating ? (
+                            <span
+                              className="
+                                h-4 w-4 animate-spin rounded-full
+                                border-2 border-red-600/30
+                                border-t-red-600
+                              "
+                            />
+                          ) : (
+                            <svg
+                              className="h-4 w-4 transition-transform duration-200 group-hover:scale-110"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l2.879 2.879a1 1 0 01-1.414 1.414L10 11.414l-2.879 2.879a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )}
+
+                          {isUpdating ? "Saving..." : "Reject"}
+                        </button>
+                      </>
+                    )}
+
+                    {/* View
                     <Link
                       href={`/applications/${application.applicantId}`}
-                      className="inline-flex items-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-900 hover:bg-gray-900 hover:text-white"
+                      className="
+                        inline-flex items-center gap-2
+                        rounded-xl border border-gray-200
+                        bg-white px-4 py-2.5
+                        text-sm font-semibold text-gray-700
+                        shadow-sm
+                        transition-all duration-200
+                        hover:-translate-y-0.5
+                        hover:border-gray-300
+                        hover:bg-gray-50
+                        hover:shadow-md
+                        active:translate-y-0
+                        active:scale-95
+                      "
                     >
                       View
-                    </Link>
+
+                      <svg
+                        className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10.707 5.293a1 1 0 010 1.414L7.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </Link> */}
                   </div>
                 </div>
-              ))}
+              );
+            })}
           </div>
         </div>
       )}
