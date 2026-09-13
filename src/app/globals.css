@@ -142,4 +142,16 @@
     font-semibold
     shrink-0;
   }
+
+  .skeleton-block {
+    @apply rounded-md bg-paper-line/70 animate-pulse;
+  }
+
+  .section-title {
+    @apply font-display text-[19px] text-ink;
+  }
+
+  .empty-state {
+    @apply flex flex-col items-center justify-center text-center px-5 py-14 gap-2;
+  }
 }
