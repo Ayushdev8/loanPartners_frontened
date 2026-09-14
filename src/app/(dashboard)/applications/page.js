@@ -5,13 +5,14 @@ import Link from "next/link";
 
 import { ApplicationsSkeleton, ApplicationStatusBadge, getInitials } from "@/components/ui/Badge";
 import { api } from "@/service/api";
+import { toast } from "react-toastify";
 
 const filters = ["ALL", "APPLIED", "APPROVED", "REJECTED"];
 
 export default function ApplicationsPage() {
   const [filter, setFilter] = useState("ALL");
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [updatingApplicantId, setUpdatingApplicantId] = useState(null);
 
@@ -58,13 +59,10 @@ const updateApplicationStatus = async (applicantId, status,partnerId) => {
     console.log(res.data);
     toast.success("Application accepted");
 
-  } catch (err) {
+  } catch(err) {
     console.log(err.response?.data);
 
-    setError(
-        err?.response?.data?.message ||
-          "Failed to update application status."
-      );
+    setError(err?.response?.data?.message || "Failed to update application status.");
   } finally {
     setUpdatingApplicantId(null);
   }
